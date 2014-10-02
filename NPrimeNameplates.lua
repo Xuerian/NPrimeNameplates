@@ -202,6 +202,7 @@ local _targetNP		= nil
 local _floor		= math.floor
 local _min			= math.min
 local _max			= math.max
+local _abs			= math.abs
 local _ipairs		= ipairs
 local _pairs		= pairs
 local _tableInsert	= table.insert
@@ -610,9 +611,11 @@ function NPrimeNameplates:UpdateNameplate(p_nameplate, p_cyclicUpdate)
 	p_nameplate.onScreen = p_nameplate.form:IsOnScreen()
 	p_nameplate.occluded = p_nameplate.form:IsOccluded()
 
-	if (p_cyclicUpdate) then
+	if (p_cyclicUpdate or p_nameplate.range_opacity == nil) then
 		local l_distanceToUnit = self:DistanceToUnit(p_nameplate.unit)
 		p_nameplate.outOfRange = l_distanceToUnit > _matrix["SliderDrawDistance"]
+		p_nameplate.range_opacity = _min(1, 1.2 - (l_distanceToUnit * 0.015))
+		self:UpdateOpacity(p_nameplate, p_nameplate.has_bubble)
 	end
 
 	if (p_nameplate.onScreen) then
@@ -968,6 +971,7 @@ end
 function NPrimeNameplates:ProcessTextBubble(p_nameplate, p_text)
 	if (GetFlag(p_nameplate.matrixFlags, F_BUBBLE)) then
 		self:UpdateOpacity(p_nameplate, (p_text ~= nil))
+		p_nameplate.has_bubble = p_text ~= nil and true or false
 	end
 end
 
@@ -1333,11 +1337,20 @@ function NPrimeNameplates:UpdateOpacity(p_nameplate, p_textBubble)
 	if (p_textBubble) then
 		p_nameplate.form:SetOpacity(0.25, 10)
 	else
-		local l_opacity = 1
+		local l_opacity = p_nameplate.range_opacity or 0
+		-- Non-target fading
 		if (_matrix["ConfigFadeNonTargeted"] and _player:GetTarget() ~= nil) then
-			l_opacity = 0.6
+			l_opacity = l_opacity - 0.3
 		end
-		p_nameplate.form:SetOpacity(l_opacity, 10)
+		-- More weighting for players
+		if p_nameplate.isPlayer then
+			l_opacity = l_opacity + 0.3
+		end
+		-- Dangerous target focus
+		if not p_nameplate.isPlayer and p_nameplate.unitClassID > Unit.CodeEnumRank.Standard and p_nameplate.disposition == Unit.CodeEnumDisposition.Hostile then
+			l_opacity = l_opacity + 0.4
+		end
+		p_nameplate.form:SetOpacity(_max(l_opacity, p_nameplate.p_type == "Other" and 0.1 or 0.2), 10)
 	end
 end
 
