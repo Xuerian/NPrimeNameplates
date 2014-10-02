@@ -1209,11 +1209,13 @@ function NPrimeNameplates:UpdateTextNameGuild(p_nameplate)
 	local l_fontSize = _matrix["SliderFontSize"]
 	local l_font = _matrix["ConfigAlternativeFont"] and _fontSecondary or _fontPrimary
 	local l_width = _textWidth(l_font[l_fontSize].font, l_name .. " ")
-
-	if (l_showGuild and p_nameplate.isPlayer) then
-		l_guild = l_unit:GetGuildName() and ("<" .. l_unit:GetGuildName() .. ">") or nil
-	elseif (l_showGuild and not l_hideAffiliation and not p_nameplate.isPlayer) then
-		l_guild = l_unit:GetAffiliationName() or nil
+	if not GroupLib.InInstance() then
+		-- l_name = l_showTitle and l_unit:GetTitleOrName() or l_unit:GetName()
+		if (l_showGuild and p_nameplate.isPlayer) then
+			l_guild = l_unit:GetGuildName() and ("<" .. l_unit:GetGuildName() .. ">") or nil
+		elseif (l_showGuild and not l_hideAffiliation and not p_nameplate.isPlayer) then
+			l_guild = l_unit:GetAffiliationName() or nil
+		end
 	end
 	
 	p_nameplate.textUnitName:SetText(l_name)
