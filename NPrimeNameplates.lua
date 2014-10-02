@@ -59,10 +59,10 @@ local _npcRank =
 {
 	[Unit.CodeEnumRank.Elite] 		= "NPrimeNameplates_Sprites:icon_6_elite",
 	[Unit.CodeEnumRank.Superior] 	= "NPrimeNameplates_Sprites:icon_5_superior",
-	[Unit.CodeEnumRank.Champion] 	= "NPrimeNameplates_Sprites:icon_4_champion",
-	[Unit.CodeEnumRank.Standard] 	= "NPrimeNameplates_Sprites:icon_3_standard",
-	[Unit.CodeEnumRank.Minion] 		= "NPrimeNameplates_Sprites:icon_2_minion",
-	[Unit.CodeEnumRank.Fodder] 		= "NPrimeNameplates_Sprites:icon_1_fodder",
+	-- [Unit.CodeEnumRank.Champion] 	= "NPrimeNameplates_Sprites:icon_4_champion",
+	-- [Unit.CodeEnumRank.Standard] 	= "NPrimeNameplates_Sprites:icon_3_standard",
+	-- [Unit.CodeEnumRank.Minion] 		= "NPrimeNameplates_Sprites:icon_2_minion",
+	-- [Unit.CodeEnumRank.Fodder] 		= "NPrimeNameplates_Sprites:icon_1_fodder",
 }
 
 
