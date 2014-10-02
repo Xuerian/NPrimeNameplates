@@ -1204,8 +1204,8 @@ function NPrimeNameplates:UpdateTextNameGuild(p_nameplate)
 	local l_showGuild = GetFlag(p_nameplate.matrixFlags, F_GUILD)
 	local l_hideAffiliation = _matrix["ConfigHideAffiliations"]
 	local l_unit = p_nameplate.unit
-	local l_name = l_showTitle and l_unit:GetTitleOrName() or l_unit:GetName()
 	local l_guild = nil
+	local l_name = l_unit:GetName()
 	local l_fontSize = _matrix["SliderFontSize"]
 	local l_font = _matrix["ConfigAlternativeFont"] and _fontSecondary or _fontPrimary
 	local l_width = _textWidth(l_font[l_fontSize].font, l_name .. " ")
