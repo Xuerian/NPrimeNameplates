@@ -417,6 +417,12 @@ function NPrimeNameplates:InitNameplate(p_unit, p_nameplate, p_type, p_target)
 	p_nameplate.hasActivationState	= self:HasActivationState(p_unit)
 	p_nameplate.hasShield			= p_unit:GetShieldCapacityMax() ~= nil and p_unit:GetShieldCapacityMax() ~= 0
 
+	local tAct = p_unit:GetActivationState()
+	if (tAct.Collect and _playerPath == "Settler" and tAct.Collect.bUsePlayerPath)
+		or tAct.SettlerMinfrastructure then
+		p_nameplate.isSettlerObject = true
+	end
+
 	local l_w = _matrix["SliderBarScale"] / 2
 	local l_h = _matrix["SliderBarScale"] / 10
 	local l_fontSize = _matrix["SliderFontSize"]
@@ -1341,6 +1347,9 @@ function NPrimeNameplates:UpdateOpacity(p_nameplate, p_textBubble)
 		-- Non-target fading
 		if (_matrix["ConfigFadeNonTargeted"] and _player:GetTarget() ~= nil) then
 			l_opacity = l_opacity - 0.3
+		-- Settler object fading
+		elseif p_nameplate.isSettlerObject then
+			l_opacity = l_opacity - 0.5
 		end
 		-- More weighting for players
 		if p_nameplate.isPlayer then
