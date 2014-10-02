@@ -1515,6 +1515,12 @@ function NPrimeNameplates:GetUnitType(p_unit)
 	if (l_type == "Ghost") 					then return "Hidden" end
 	if (l_type == "Mount")	 				then return "Hidden" end
 
+	local tAct = p_unit:GetActivationState()
+	if (tAct.Collect and _playerPath == "Settler" and tAct.Collect.bUsePlayerPath)
+		or tAct.SettlerMinfrastructure then
+		return "Other"
+	end
+
 	local l_disposition = p_unit:GetDispositionTo(_player)
 
 	if (_exceptions[p_unit:GetName()] ~= nil) then
