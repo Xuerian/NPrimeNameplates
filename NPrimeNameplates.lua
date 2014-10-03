@@ -1492,7 +1492,7 @@ function NPrimeNameplates:GetNameplateVisibility(p_nameplate)
 	if (not p_nameplate.nativePlate and not p_nameplate.hasActivationState and p_nameplate.isObjective) then return false end
 
 	if (not GetFlag(p_nameplate.matrixFlags, F_NAMEPLATE)) then
-		return p_nameplate.hasActivationState or (p_nameplate.isObjective and p_nameplate.unit:ShouldShowNameplate())
+		return p_nameplate.hasActivationState or (p_nameplate.isObjective and p_nameplate.nativePlate)
 	end
 
 	if (p_nameplate.unit:IsDead()) 					then return false end
