@@ -1237,11 +1237,11 @@ function NPrimeNameplates:UpdateTextLevel(p_nameplate)
 	local l_difference = (l_level or 0) - _player:GetLevel()
 	if (l_level ~= nil and _abs(l_difference) > 1)  then
 		if not p_nameplate.isPlayer then
-			l_level = (l_difference > 0 and "+" or "") .. l_difference .. "   "
+			l_level = (l_difference > 0 and "+" or "") .. l_difference
 		end
 		local l_fontSize = _matrix["SliderFontSize"]
 		local l_font = _matrix["ConfigAlternativeFont"] and _fontSecondary or _fontPrimary
-		local l_width = _textWidth(l_font[l_fontSize].font, l_level)
+		local l_width = _textWidth(l_font[l_fontSize].font, l_level .. "   ")
 		p_nameplate.levelWidth = l_width
 		p_nameplate.textUnitLevel:SetText(l_level)
 	else
