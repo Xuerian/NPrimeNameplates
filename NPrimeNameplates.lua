@@ -383,6 +383,7 @@ function NPrimeNameplates:InitNameplate(p_unit, p_nameplate, p_type, p_target)
 	p_nameplate.targetNP 			= p_target
 	p_nameplate.hasHealth 			= self:HasHealth(p_unit)
 
+	p_nameplate.nativePlate			= p_unit:ShouldShowNamePlate()
 	if (p_target) then
 		local l_source = self.nameplates[p_unit:GetId()]
 		p_nameplate.ccActiveID 		= l_source and l_source.ccActiveID or -1
@@ -1488,8 +1489,10 @@ function NPrimeNameplates:GetNameplateVisibility(p_nameplate)
 	if (_matrix["ConfigOcclusionCulling"] and 
 		p_nameplate.occluded) 						then return false end
 
+	if (not p_nameplate.nativePlate and not p_nameplate.hasActivationState and p_nameplate.isObjective) then return false end
+
 	if (not GetFlag(p_nameplate.matrixFlags, F_NAMEPLATE)) then
-		return p_nameplate.hasActivationState or p_nameplate.isObjective
+		return p_nameplate.hasActivationState or (p_nameplate.isObjective and p_nameplate.unit:ShouldShowNameplate())
 	end
 
 	if (p_nameplate.unit:IsDead()) 					then return false end
