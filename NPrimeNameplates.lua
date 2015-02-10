@@ -1415,19 +1415,25 @@ end
 function NPrimeNameplates:UpdateIconsNPC(p_nameplate)
 	local l_flags = 0
 	local l_icons = 0
+	local l_isPathMission = false
+
 
 	local l_rewardInfo = p_nameplate.unit:GetRewardInfo()
 	if l_rewardInfo then
 		for i = 1, #l_rewardInfo do
-			local l_type = l_rewardInfo[i].eType
+			local l_info = l_rewardInfo[i]
+			local l_type = l_info.eType
 			if (l_type == Unit.CodeEnumRewardInfoType[_playerPath]) then
 				l_icons = l_icons + 1
 				l_flags = SetFlag(l_flags, F_PATH)
+				if l_info.pmMission and not l_info.pmMission:IsComplete() then
+					l_isPathMission = true
+				end
 			elseif (l_type == Unit.CodeEnumRewardInfoType.Quest) then
 				l_icons = l_icons + 1
 				l_flags = SetFlag(l_flags, F_QUEST)
 			elseif (l_type == Unit.CodeEnumRewardInfoType.Challenge) then
-				local l_ID = l_rewardInfo[i].idChallenge
+				local l_ID = l_info.idChallenge
 				local l_challenge = self.challenges[l_ID]
 				if (l_challenge ~= nil and l_challenge:IsActivated()) then
 					l_icons = l_icons + 1
@@ -1455,7 +1461,7 @@ function NPrimeNameplates:UpdateIconsNPC(p_nameplate)
 		end
 
 		if (GetFlag(l_flags, F_PATH)) then
-			self:AddIcon(p_nameplate, "IconPath", l_iconN, l_width)
+			self:AddIcon(p_nameplate, l_isPathMission and "IconPath" or "IconPathGrey", l_iconN, l_width)
 			l_iconN = l_iconN + 1
 		end
 

@@ -45,6 +45,9 @@
     <Sprite Name="IconPath" Cycle="1">
         <Frame Texture="NPrimeNameplates\Textures.tga" x0="96" x1="96" x2="96" x3="96" x4="128" x5="128" y0="32" y1="32" y2="32" y3="32" y4="64" y5="64" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
     </Sprite>
+    <Sprite Name="IconPathGrey" Cycle="1">
+        <Frame Texture="NPrimeNameplates\Textures.tga" x0="96" x1="96" x2="96" x3="96" x4="128" x5="128" y0="96" y1="96" y2="96" y3="96" y4="128" y5="128" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
+    </Sprite>
     <Sprite Name="IconChallenge" Cycle="1">
         <Frame Texture="NPrimeNameplates\Textures.tga" x0="128" x1="128" x2="128" x3="128" x4="160" x5="160" y0="32" y1="32" y2="32" y3="32" y4="64" y5="64" Stretchy="1" HotspotX="0" HotspotY="0" Duration="1.000" StartColor="white" EndColor="white"/>
     </Sprite>
