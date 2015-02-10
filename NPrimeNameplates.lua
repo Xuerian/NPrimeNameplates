@@ -602,10 +602,11 @@ function NPrimeNameplates:UpdateBuffer()
 end
 
 function NPrimeNameplates:OnFrame()
-	if (_player == nil) then
+	if (_player == nil or not _player:IsValid()) then
 		_player = GameLib.GetPlayerUnit()
 		if (_player ~= nil) then
-			_playerPath = _paths[PlayerPathLib.GetPlayerPathType()]
+			_playerPathId = PlayerPathLib.GetPlayerPathType()
+			_playerPath = _paths[_playerPathId]
 			if (_player:GetTarget() ~= nil) then
 				self:OnTargetUnitChanged(_player:GetTarget())
 			end
@@ -1416,16 +1417,16 @@ function NPrimeNameplates:UpdateIconsNPC(p_nameplate)
 	local l_icons = 0
 
 	local l_rewardInfo = p_nameplate.unit:GetRewardInfo()
-	if (l_rewardInfo ~= nil and _next(l_rewardInfo) ~= nil) then
+	if l_rewardInfo then
 		for i = 1, #l_rewardInfo do
-			local l_type = l_rewardInfo[i].strType
-			if (l_type == _playerPath) then
+			local l_type = l_rewardInfo[i].eType
+			if (l_type == Unit.CodeEnumRewardInfoType[_playerPath]) then
 				l_icons = l_icons + 1
 				l_flags = SetFlag(l_flags, F_PATH)
-			elseif (l_type == "Quest") then
+			elseif (l_type == Unit.CodeEnumRewardInfoType.Quest) then
 				l_icons = l_icons + 1
 				l_flags = SetFlag(l_flags, F_QUEST)
-			elseif (l_type == "Challenge") then
+			elseif (l_type == Unit.CodeEnumRewardInfoType.Challenge) then
 				local l_ID = l_rewardInfo[i].idChallenge
 				local l_challenge = self.challenges[l_ID]
 				if (l_challenge ~= nil and l_challenge:IsActivated()) then
@@ -1581,7 +1582,7 @@ function NPrimeNameplates:GetUnitType(p_unit)
 
 	if (l_rewardInfo ~= nil and _next(l_rewardInfo) ~= nil) then
 		for i = 1, #l_rewardInfo do
-			if (l_rewardInfo[i].strType ~= "Challenge") then
+			if (l_rewardInfo[i].eType ~= Unit.CodeEnumRewardInfoType.Challenge) then
 				return _dispStr[l_disposition]
 			end
 		end
