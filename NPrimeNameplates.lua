@@ -1,7 +1,49 @@
------------------------------------------------------------------------------------------------
--- Client Lua Script for NPrimeNameplates
--- Copyright (c) NCsoft. All rights reserved
------------------------------------------------------------------------------------------------
+----------------------------------------------------------
+-- Wait until a condition is met (Or simply wait for a delay) to call a given function
+
+local Alfred = { timers = {}, i = 0 }
+function Alfred:Wait(fCondition, fAction, nfDelay)
+	local i = self.i
+	local timer = ApolloTimer.Create(nfDelay or 0.1, true, "Timer_"..i, self)
+	self.timers[i] = timer
+	-- Apparently ApolloTimer doesn't like numerical function keys
+	self["Timer_"..i] = function()
+		if not fCondition or fCondition() then
+			timer:Stop()
+			fAction()
+			-- Release
+			self.timers[i] = nil
+			self["Timer_"..i] = nil
+		end
+	end
+	self.i = i + 1
+	return i
+end
+
+
+----------------------------------------------------------
+-- I want my print(), and I want my print() whenitwillactuallywork!
+
+local print_buffer = {}
+local function print(...)
+	table.insert(print_buffer, {...})
+end
+
+Alfred:Wait(nil, function()
+	function print(...)
+		local out = {}
+		for i=1,select('#', ...) do
+			local v = select(i, ...)
+			table.insert(out,  v == nil and "[nil]" or tostring(v))
+		end
+		Print(table.concat(out, " "))
+	end
+	-- Process and clear buffer
+	for i,v in ipairs(print_buffer) do
+		print(unpack(v))
+	end
+	print_buffer = nil
+end, 3)
 
 require "Window"
 require "ChallengesLib"
