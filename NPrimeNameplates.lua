@@ -132,10 +132,10 @@ local _typeColor =
 
 local _paths =
 {
-	[0] = "Soldier",
-	[1] = "Settler",
-	[2] = "Scientist",
-	[3] = "Explorer",
+	[PlayerPathLib.PlayerPathType_Soldier] = "Soldier", -- 0
+	[PlayerPathLib.PlayerPathType_Settler] = "Settler", -- 1
+	[PlayerPathLib.PlayerPathType_Scientist] = "Scientist", -- 2
+	[PlayerPathLib.PlayerPathType_Explorer] = "Explorer", -- 3
 }
 
 local _matrixCategories =
