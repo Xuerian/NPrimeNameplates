@@ -346,12 +346,12 @@ function NPrimeNameplates:OnLoad()
 end
 
 function NPrimeNameplates:OnSave(p_type)
-	if p_type ~= GameLib.CodeEnumAddonSaveLevel.Character then return end
+	if p_type ~= GameLib.CodeEnumAddonSaveLevel.Account then return end
 	return _matrix
 end
 
 function NPrimeNameplates:OnRestore(p_type, p_savedData)
-	if p_type ~= GameLib.CodeEnumAddonSaveLevel.Character then return end
+	if p_type ~= GameLib.CodeEnumAddonSaveLevel.Account then return end
 	_matrix = p_savedData
 	self:CheckMatrixIntegrity()
 end
