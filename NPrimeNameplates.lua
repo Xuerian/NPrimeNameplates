@@ -1193,8 +1193,10 @@ function NPrimeNameplates:InitConfiguration()
 end
 
 function NPrimeNameplates:DistributeMatrixColumns(p_categoryWindow, p_categoryName)
-	local l_columns = (1 / #_matrixFilters)
-	for i, filter in _ipairs(_matrixFilters) do
+	local n = #_matrixFilters
+	local l_columns = 1/n
+	for i=1,n do
+		local filter = _matrixFilters[i]
 		local l_left = l_columns * (i - 1)
 		local l_right = l_columns * i
 		local l_button = p_categoryWindow:FindChild(filter)
