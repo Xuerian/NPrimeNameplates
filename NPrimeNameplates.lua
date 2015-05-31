@@ -457,10 +457,11 @@ function NPrimeNameplates:InitNameplate(p_unit, p_nameplate, p_type, p_target)
 	p_nameplate.isMounted 			= p_unit:IsMounted()
 	p_nameplate.isObjective			= false
 	p_nameplate.pvpFlagged 			= p_unit:IsPvpFlagged()
+	p_nameplate.activationState		= p_unit:GetActivationState()
 	p_nameplate.hasActivationState	= self:HasActivationState(p_unit)
 	p_nameplate.hasShield			= p_unit:GetShieldCapacityMax() ~= nil and p_unit:GetShieldCapacityMax() ~= 0
 
-	local tAct = p_unit:GetActivationState()
+	local tAct = p_nameplate.activationState
 	if (tAct.Collect and _playerPath == "Settler" and tAct.Collect.bUsePlayerPath)
 		or tAct.SettlerMinfrastructure then
 		p_nameplate.isSettlerObject = true
@@ -1056,19 +1057,23 @@ function NPrimeNameplates:OnUnitLevelChanged(p_unit)
 	end
 end
 
-function NPrimeNameplates:OnUnitActivationTypeChanged(p_unit)
-	if (_player == nil) then return end
+function NPrimeNameplates:OnUnitActivationTypeChanged(unit)
+	if not _player then return end
 
-	local l_nameplate = self.nameplates[p_unit:GetId()]
-	local l_hasActivationState = self:HasActivationState(p_unit)
+	local tPlate = self.nameplates[unit:GetId()]
+	local bActivation = self:HasActivationState(unit)
 
-	if (l_nameplate ~= nil) then
-		l_nameplate.hasActivationState = l_hasActivationState
-	elseif (l_hasActivationState) then
-		self:AllocateNameplate(p_unit)
+	if not tPlate then
+		if not bActivation then return end
+		tPlate = self:AllocateNameplate(unit)
+		if not tPlate then return end
+		tPlate.hasActivationState = bActivation
+		tPlate.activationState = unit:GetActivationState()
 	end
-	if (_targetNP ~= nil and _player:GetTarget() == p_unit) then
-		_targetNP.hasActivationState = l_hasActivationState
+
+	if _targetNP and _targetNP.unit == unit then
+		_targetNP.hasActivationState = bActivation
+		_targetNP.activationState = tPlate.activationState
 	end
 end
 
@@ -1540,7 +1545,9 @@ function NPrimeNameplates:GetNameplateVisibility(p_nameplate)
 	if (_matrix["ConfigOcclusionCulling"] and 
 		p_nameplate.occluded) 						then return false end
 
-	if (not p_nameplate.nativePlate and not p_nameplate.hasActivationState and p_nameplate.isObjective) then return false end
+	if not p_nameplate.nativePlate then
+		if not p_nameplate.hasActivationState and p_nameplate.isObjective then return false end
+	end
 
 	if (not GetFlag(p_nameplate.matrixFlags, F_NAMEPLATE)) then
 		return p_nameplate.hasActivationState or (p_nameplate.isObjective and p_nameplate.nativePlate)
@@ -1620,15 +1627,15 @@ function NPrimeNameplates:SetCombatState(p_nameplate, p_inCombat)
 	end
 end
 
-function NPrimeNameplates:HasActivationState(p_unit)
-	local l_activationStates = p_unit:GetActivationState()
-	if (_next(l_activationStates) == nil) then return false end
-	local l_show = false
-	for state, a in _pairs(l_activationStates) do
-		if (state == "Busy") then return false end
-		if (not _asbl[state]) then l_show = true end
+function NPrimeNameplates:HasActivationState(unit)
+	local tAct = unit:GetActivationState()
+	if not tAct or tAct.Busy then return false end
+	for k in _pairs(tAct) do
+		if not _asbl[k] then
+			return true
+		end
 	end
-	return l_show
+	return false
 end
 
 function NPrimeNameplates:SetProgressBar(p_bar, p_current, p_max)
