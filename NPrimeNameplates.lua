@@ -1582,8 +1582,9 @@ function NPrimeNameplates:GetUnitType(p_unit)
 	if (l_type == "Mount")	 				then return "Hidden" end
 
 	local tAct = p_unit:GetActivationState()
-	if (tAct.Collect and _playerPath == "Settler" and tAct.Collect.bUsePlayerPath)
-		or tAct.SettlerMinfrastructure then
+	if ((tAct.Collect and _playerPath == "Settler" and tAct.Collect.bUsePlayerPath)
+		or tAct.SettlerMinfrastructure)
+		or (tAct.ScientistRawScannable and _playerPath == "Scientist" and tAct.ScientistRawScannable.bIsActive) then
 		return "Other"
 	end
 
