@@ -1554,6 +1554,8 @@ function NPrimeNameplates:GetNameplateVisibility(p_nameplate)
 
 	if not p_nameplate.nativePlate then
 		if not p_nameplate.hasActivationState and p_nameplate.isObjective then return false end
+		local tAct = p_nameplate.activationState
+		if tAct.QuestTarget and not (tAct.interact and tAct.Interact.bCanInteract) then return false end
 	end
 
 	if (not GetFlag(p_nameplate.matrixFlags, F_NAMEPLATE)) then
