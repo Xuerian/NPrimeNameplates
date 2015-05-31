@@ -1642,6 +1642,7 @@ function NPrimeNameplates:AllocateNameplate(p_unit)
 		if (l_type ~= "Hidden") then
 			local l_nameplate = self:InitNameplate(p_unit, _tableRemove(self.pool) or nil, l_type)
 			self.nameplates[p_unit:GetId()] = l_nameplate
+			return l_nameplate
 		end
 	end
 end
