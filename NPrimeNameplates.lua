@@ -1422,7 +1422,7 @@ end
 function NPrimeNameplates:UpdateIconsNPC(p_nameplate)
 	local l_flags = 0
 	local l_icons = 0
-	local l_isPathMission = false
+	local l_isPathMission, l_forceHidePath = false, false
 
 
 	local l_rewardInfo = p_nameplate.unit:GetRewardInfo()
@@ -1435,10 +1435,17 @@ function NPrimeNameplates:UpdateIconsNPC(p_nameplate)
 				l_flags = SetFlag(l_flags, F_PATH)
 				if l_info.pmMission and not l_info.pmMission:IsComplete() then
 					l_isPathMission = true
+					local tScan = p_nameplate.activationState.ScientistScannable
+					if _playerPath == "Scientist" and tScan and not (tScan.bCanInteract or tScan.bShowCallout) then
+						l_forceHidePath = true
+					end
 				end
 			elseif (l_type == Unit.CodeEnumRewardInfoType.Quest) then
-				l_icons = l_icons + 1
-				l_flags = SetFlag(l_flags, F_QUEST)
+				-- Ignore optional objectives for "Achieved" quests
+				if not QuestLogAddon or not QuestLogAddon.activeQuests or not QuestLogAddon.activeQuests[l_info.strTitle] or QuestLogAddon.activeQuests[l_info.strTitle]:GetState() ~= Quest.QuestState_Achieved then
+					l_icons = l_icons + 1
+					l_flags = SetFlag(l_flags, F_QUEST)
+				end
 			elseif (l_type == Unit.CodeEnumRewardInfoType.Challenge) then
 				local l_ID = l_info.idChallenge
 				local l_challenge = self.challenges[l_ID]
@@ -1467,7 +1474,7 @@ function NPrimeNameplates:UpdateIconsNPC(p_nameplate)
 			l_iconN = l_iconN + 1
 		end
 
-		if (GetFlag(l_flags, F_PATH)) then
+		if (not l_forceHidePath and GetFlag(l_flags, F_PATH)) then
 			self:AddIcon(p_nameplate, l_isPathMission and "IconPath" or "IconPathGrey", l_iconN, l_width)
 			l_iconN = l_iconN + 1
 		end
